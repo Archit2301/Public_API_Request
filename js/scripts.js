@@ -27,12 +27,15 @@ function generateGallery(data) {
       cards[i].addEventListener("click", (e) => {
         console.log(e.target);
         generateModalWindow(employees[i]);
+
       });
     }
 }
 
 function generateModalWindow(employee) {
   const modalDiv = document.createElement('div');
+  const dob = employee.dob.date;
+  const birthday = dob.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/, '$2/$3/$1');
   modalDiv.classList = 'modal-container';
   const modalHtml = `<div class="modal">
       <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -43,10 +46,17 @@ function generateModalWindow(employee) {
           <p class="modal-text cap">${employee.location.city}</p>
           <hr>
           <p class="modal-text">${employee.phone}</p>
-          <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, OR ${employee.location.postcode}</p>
-          <p class="modal-text">Birthday: 10/21/2015</p>
+          <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.state} ${employee.location.postcode}</p>
+          <p class="modal-text">Birthday: ${birthday}</p>
       </div>
   </div>`;
   modalDiv.innerHTML = modalHtml;
   body.appendChild(modalDiv);
+  closeModalWindow();
+}
+
+function closeModalWindow() {
+  document.getElementById('modal-close-btn').addEventListener('click', (e) => {
+    body.removeChild(body.lastChild);
+  });
 }
