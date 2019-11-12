@@ -1,9 +1,25 @@
+/****************************************
+TechDegree Project 5 - Public API Request
+*****************************************/
+
 const gallery = document.getElementById('gallery');
 const body = document.body;
 
-fetch('https://randomuser.me/api/?results=12')
-  .then(res => res.json())
+/**
+* Fetches the data from https://randomuser.me/api
+* @param (string) url
+*/
+
+fetch('https://randomuser.me/api/?results=12&nat=ca')
+  .then(res => res.json())                  //parsing the data to json format
   .then(res => generateGallery(res))
+  .then(res => searchEmployee())
+  .catch(error => console.log('Oops! Sorry we are unable to fetch data at this moment...', error)) //catches error at console when the site is unavailable and data cannot be fetched
+
+  /**
+  * Generates 12 random employee cards and displays it to the browser
+  * @param (object) data - data received in json format
+  */
 
 function generateGallery(data) {
   const employees = data.results;
@@ -27,15 +43,19 @@ function generateGallery(data) {
       cards[i].addEventListener("click", (e) => {
         console.log(e.target);
         generateModalWindow(employees[i]);
-
       });
     }
 }
 
+/**
+* Generates modal window for the selected employee
+* @param (object) employee - contains employee info
+*/
+
 function generateModalWindow(employee) {
   const modalDiv = document.createElement('div');
   const dob = employee.dob.date;
-  const birthday = dob.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/, '$2/$3/$1');
+  const birthday = dob.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/, '$2/$3/$1');    //Regex replace method to get the correct date format
   modalDiv.classList = 'modal-container';
   const modalHtml = `<div class="modal">
       <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -52,11 +72,28 @@ function generateModalWindow(employee) {
   </div>`;
   modalDiv.innerHTML = modalHtml;
   body.appendChild(modalDiv);
-  closeModalWindow();
+  closeModalWindow();     //function call to close the window on button press
 }
+
+/**
+* Contains event to close the modal window when the button is pressed
+*/
 
 function closeModalWindow() {
   document.getElementById('modal-close-btn').addEventListener('click', (e) => {
-    body.removeChild(body.lastChild);
+    body.removeChild(body.lastChild);         //removes the modal window from the dom
   });
+}
+
+/**
+* Appends the search bar to the DOM
+*/
+
+function searchEmployee() {
+  let searchHtml = `<form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>`;
+  const searchContainer = document.querySelector('.search-container');
+  searchContainer.innerHTML = searchHtml;
 }
