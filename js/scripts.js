@@ -1,7 +1,3 @@
-/****************************************
-TechDegree Project 5 - Public API Request
-*****************************************/
-
 const gallery = document.getElementById('gallery');
 const body = document.body;
 
